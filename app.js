@@ -20,6 +20,7 @@ const initializeDBAndServer = async () => {
     });
   } catch (e) {
     console.log(`DB Error: ${e.message}`);
+    process.exit(1);
   }
 };
 
@@ -67,7 +68,12 @@ app.get("/movies/:movieId/", async (request, response) => {
 
   const getMovieQuery = `SELECT * FROM movie WHERE movie_id = ${movieId};`;
   const movie = await db.get(getMovieQuery);
-  response.send(movie);
+  response.send({
+    movieId: movie["movie_id"],
+    directorId: movie["director_id"],
+    movieName: movie["movie_name"],
+    leadActor: movie["lead_actor"],
+  });
 });
 
 // 4. Update movie API
